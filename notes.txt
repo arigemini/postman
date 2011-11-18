@@ -27,3 +27,7 @@ e.g. /Users/arindam/workplace/CS499/enron_mail_20110402/maildir/beck-s/discussio
 
                 Total how many email:
                 How many emails per folder (e.g. inbox, sent, discussion_items)
+
+
+Tests:
+Just change the name and see if the learner can detect that the message was actually intended for someone else
