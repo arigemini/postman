@@ -1,0 +1,29 @@
+Quick Notes
+
+1. Out of the first 100,000 files scanned, no 2 "started" with the same message-ID.
+
+2. However, if we look at all the "Message-ID" fields contained in an email. Then, if 2 files share the same "Message-ID" somewhere in the file, it was found that they are usually very similar to each other. (Differing mainly in the main message-ID and the X-folder fields).
+e.g. /Users/arindam/workplace/CS499/enron_mail_20110402/maildir/beck-s/discussion_threads/269. 
+        /Users/arindam/workplace/CS499/enron_mail_20110402/maildir/beck-s/all_documents/302.
+                have the Message-ID <OF164C0D1F.8D21ED53-ON862569E4.005A3F31@enron.com>
+                However in this case 
+                /Users/arindam/workplace/CS499/enron_mail_20110402/maildir/campbell-l/sent/461. 
+                /Users/arindam/workplace/CS499/enron_mail_20110402/maildir/campbell-l/sent/460.
+                they have the same message ID's appearing in the message, but are sent to 2 different recipients.
+
+                3. The inbox and sent folders of the emails (of the first 100,000 which may include all such mails) didn't have same "Message-IDs" occurring in them.
+
+                4. How to handle emails which have other emails embedded in them. For example forwards. Or in someone's inbox, the email might be the continuation of some other email thread.
+
+
+                Stats:
+
+                For each user:
+                - How many outgoing messages does he have
+                - How many incoming messages does he have
+                - Is his folder in the dataset
+                - Number of different people emailing to him
+                - Number of different people he has emailed
+
+                Total how many email:
+                How many emails per folder (e.g. inbox, sent, discussion_items)
