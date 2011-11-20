@@ -24,7 +24,7 @@ def scan(path, person, level):
     counter = 0
     
     listing = filter(lambda x: x[0] != '.', os.listdir(path))
-    for files in listing:
+    for files in listing:       
         fullpath = os.path.join(path, files)
         if level == 0:
             if not os.path.isdir(fullpath):
@@ -33,7 +33,11 @@ def scan(path, person, level):
             name_to_idx[files] = len(names)
             names.append(files)
             data[name_to_idx[files]] = {}
-            counter += scan(fullpath, files, 1)
+
+            now = scan(fullpath, files, 1)
+            person_emails[files] = now
+            counter += now
+
         elif level == 1:
             if not os.path.isdir(fullpath):
                 print >> sys.stderr, "{0} is not a directory".format(fullpath)
@@ -52,11 +56,9 @@ def scan(path, person, level):
         else:
             if os.path.isdir(fullpath):
                 counter += scan(fullpath, person, level + 1)
-            elif files[0] != '.':
+            else:
                 counter += 1
     
-    if level == 1:
-        person_emails[person] = counter
     return counter
 
 def dump_sparse_csv(sparse_csv_file):
@@ -87,18 +89,20 @@ def dump_sparse_csv(sparse_csv_file):
 def dump_grouped_csv(grouped_csv_file):
     
     writer = open(grouped_csv_file, 'w')
-
+    
+    writer.write("Name,Emails\n")
     for person, emails in sorted(person_emails.iteritems(), key=lambda x: x[1], reverse=True):
         writer.write("{0},{1}\n".format(person, emails))
     writer.write("\n")
-    
+   
+    writer.write("Folder, Emails\n")
     for folder, emails in sorted(folder_emails.iteritems(), key=lambda x: x[1], reverse=True):
         writer.write("{0},{1}\n".format(folder, emails))
     writer.write("\n")
     
-    for personidx, folderidx_counter in data.iteritems():
+    for personidx, folderidx_counter in sorted(data.iteritems(), key=lambda x: names[x[0]]):
         writer.write(names[personidx] + "\n")
-        for folder_idx, counter in folderidx_counter.iteritems():
+        for folder_idx, counter in sorted(folderidx_counter.iteritems(), key=lambda x: folders[x[0]]):
             writer.write("{0},{1}\n".format(folders[folder_idx], counter))
         writer.write("\n")
    
