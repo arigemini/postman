@@ -34,11 +34,8 @@ class Email:
             self.cc_list = list(w.strip() for w in msg['Cc'].split(','))
         if msg.has_key('Bcc'):
             self.bcc_list = list(w.strip() for w in msg['Bcc'].split(','))
-        
         self.subject = msg['Subject'].strip()
-        
         self.message = msg.get_payload()
-        
         
         infile.close()
 
