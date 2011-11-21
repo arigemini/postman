@@ -11,22 +11,22 @@ e.g. /Users/arindam/workplace/CS499/enron_mail_20110402/maildir/beck-s/discussio
                 /Users/arindam/workplace/CS499/enron_mail_20110402/maildir/campbell-l/sent/460.
                 they have the same message ID's appearing in the message, but are sent to 2 different recipients.
 
-                3. The inbox and sent folders of the emails (of the first 100,000 which may include all such mails) didn't have same "Message-IDs" occurring in them.
+3. The inbox and sent folders of the emails (of the first 100,000 which may include all such mails) didn't have same "Message-IDs" occurring in them.
 
-                4. How to handle emails which have other emails embedded in them. For example forwards. Or in someone's inbox, the email might be the continuation of some other email thread.
+4. How to handle emails which have other emails embedded in them. For example forwards. Or in someone's inbox, the email might be the continuation of some other email thread.
 
 
-                Stats:
+Stats:
 
-                For each user:
-                - How many outgoing messages does he have
-                - How many incoming messages does he have
-                - Is his folder in the dataset
-                - Number of different people emailing to him
-                - Number of different people he has emailed
+For each user:
+- How many outgoing messages does he have
+- How many incoming messages does he have
+- Is his folder in the dataset
+- Number of different people emailing to him
+- Number of different people he has emailed
 
-                Total how many email:
-                How many emails per folder (e.g. inbox, sent, discussion_items)
+Total how many email:
+How many emails per folder (e.g. inbox, sent, discussion_items)
 
 
 Tests:
