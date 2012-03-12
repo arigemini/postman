@@ -7,7 +7,7 @@ MAX_FILES = 100000;
 def parsefile(filepath):
     parsefile.counter = parsefile.counter + 1;  
     if parsefile.counter > MAX_FILES: # Limit the total number of files scanned
-         return 0
+        return 0
     
     if parsefile.counter % 1000 == 0:
         # print "****"
