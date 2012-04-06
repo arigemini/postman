@@ -41,11 +41,20 @@ class SnowInputGenerator(object):
                         
         return ",".join(feature_line) + ":"
     
-    def generate(self, snow_input_file, feature_mappings_file):
+    def generate(self, snow_input_file, feature_mappings_file, labels_file):
+        all_labels = []
         with open(snow_input_file, 'w') as file_handle:
             for email_file in self.email_files:
-                features = self.feature_generator.get_features(email_file)
+                features, labels = self.feature_generator.get_features_and_labels(email_file)
+                all_labels.append(labels)
                 print >> file_handle, self._get_feature_line(features)
+        
+        with open(labels_file, 'w') as file_handle:
+            for label in all_labels:
+                for label_name, values in label.iteritems():
+                    if type(values) == str:
+                        values = [values]
+                    print >> file_handle, ", ".join([str(self.feature_to_id[label_name][value]) for value in values])
         
         with open(feature_mappings_file, 'w') as file_handle:
             for feature_id, feature_name in self.id_to_feature.iteritems():
@@ -53,7 +62,11 @@ class SnowInputGenerator(object):
                 
 if __name__ == "__main__":
     feature_generator = EmailFeatures()
-    files = glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/allen-p/sent/*.")
+    files = glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/dasovich-j/inbox/*.")
+    files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/sally-b/inbox/*."))
+    files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/lay-k/inbox/*."))
+    files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/jones-t/inbox/*."))
+    files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/skilling-j/inbox/*."))
     snow_input_generator = SnowInputGenerator(files, feature_generator)
-    snow_input_generator.generate('training_set_for_snow.in', 'feature_id_to_string_mappings.txt')
+    snow_input_generator.generate('train.snow', 'feature_id_to_string_mappings.snow', 'labels.snow')
     

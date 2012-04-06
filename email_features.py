@@ -6,10 +6,11 @@ class EmailFeatures(object):
     def __init__(self):
         pass
         
-    def get_features(self, email_file):
+    def get_features_and_labels(self, email_file):
         email = Email(email_file) 
         actual_message = email.remove_original_message
-        features = {'from': email.from_, 'to': email.to_list, 'subject': email.subject}
+        features = {'from': email.from_, 'subject': email.subject}
+        features['to'] = email.to_list[0] if email.to_list else []
         idx = actual_message.find('Thanks,')
         if idx != -1:
             features['senderInfo'] = actual_message[idx + 7:].strip()
@@ -19,8 +20,8 @@ class EmailFeatures(object):
             while actual_message[end].isalpha():
                 end += 1
             features['toInfo'] = actual_message[idx + 3: end]
-        
-        return features
+        labels = {'to': email.to_list[0]} if email.to_list else {'to': []}
+        return features, labels
 
 if __name__ == "__main__":
     feature_generator = EmailFeatures()
