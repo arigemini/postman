@@ -45,6 +45,7 @@ class SnowInputGenerator(object):
         all_labels = []
         with open(snow_input_file, 'w') as file_handle:
             for email_file in self.email_files:
+                print "Getting features for", email_file
                 features, labels = self.feature_generator.get_features_and_labels(email_file)
                 all_labels.append(labels)
                 print >> file_handle, self._get_feature_line(features)
@@ -62,8 +63,9 @@ class SnowInputGenerator(object):
                 
 if __name__ == "__main__":
     feature_generator = EmailFeatures()
+#    files = glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/dasovich-j/inbox/[12].")
     files = glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/dasovich-j/inbox/*.")
-    files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/sally-b/inbox/*."))
+    # files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/beck-s/inbox/*."))
     files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/lay-k/inbox/*."))
     files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/jones-t/inbox/*."))
     files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/skilling-j/inbox/*."))
