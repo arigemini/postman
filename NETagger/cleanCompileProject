@@ -1,0 +1,11 @@
+#!/bin/sh
+
+LBJ_NE_TAGGER=${LBJ_NE_TAGGER-"${HOME}/LbjNerTagger1.11.release"}
+
+cpath="${LBJ_NE_TAGGER}/LBJ2.jar:${LBJ_NE_TAGGER}/LBJ2Library.jar:${LBJ_NE_TAGGER}/bin"
+srcdir="${LBJ_NE_TAGGER}/src/IO:${LBJ_NE_TAGGER}/src/StringStatisticsUtils:${LBJ_NE_TAGGER}/src/LbjTagger"
+
+rm -r bin/LbjTagger/*.class
+
+javac -cp $cpath -d bin -sourcepath ${srcdir} ./src/LbjTagger/Annotator.java
+

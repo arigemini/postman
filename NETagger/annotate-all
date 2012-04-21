@@ -1,0 +1,8 @@
+#!/bin/sh
+
+LBJ_NE_TAGGER=${LBJ_NE_TAGGER-"${HOME}/LbjNerTagger1.11.release"}
+cpath="${LBJ_NE_TAGGER}/$LBJ2.jar:${LBJ_NE_TAGGER}/LBJ2Library.jar:${LBJ_NE_TAGGER}/bin:${PWD}/bin"
+
+cd ${LBJ_NE_TAGGER}
+java -classpath $cpath -Xmx2000m LbjTagger.Annotator $@
+cd -
