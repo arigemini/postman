@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -classpath $LBJ2.jar:LBJ2Library.jar:bin -Xmx2000m  LbjTagger.Annotator $@

@@ -1,10 +1,10 @@
 from email_features import EmailFeatures
-import glob
+import os
 
 class SnowInputGenerator(object):
    
-    def __init__(self, email_files, feature_generator):
-        self.email_files = email_files
+    def __init__(self, email_dirs, feature_generator):
+        self.email_dirs = email_dirs
         self.feature_generator = feature_generator
         
         self.id_to_feature = dict()
@@ -41,34 +41,43 @@ class SnowInputGenerator(object):
                         
         return ",".join(feature_line) + ":"
     
-    def generate(self, snow_input_file, feature_mappings_file, labels_file):
+    def generate(self, features_file, feature_mappings_file, labels_file, emails_file):
         all_labels = []
-        with open(snow_input_file, 'w') as file_handle:
-            for email_file in self.email_files:
-                print "Getting features for", email_file
-                features, labels = self.feature_generator.get_features_and_labels(email_file)
-                all_labels.append(labels)
-                print >> file_handle, self._get_feature_line(features)
-        
-        with open(labels_file, 'w') as file_handle:
-            for label in all_labels:
-                for label_name, values in label.iteritems():
-                    if type(values) == str:
-                        values = [values]
-                    print >> file_handle, ", ".join([str(self.feature_to_id[label_name][value]) for value in values])
+        with open(features_file, 'w') as features_file_handle:
+            with open(labels_file, 'w') as labels_file_handle:
+                with open(emails_file, 'w') as emails_file_handle:
+                    for email_dir in self.email_dirs:
+                        print "Processing email dir", email_dir
+                        for email_file in filter(lambda cur: os.path.isfile(cur), map(lambda cur: os.path.join(email_dir, cur), os.listdir(email_dir))):
+                            print "\t", email_file
+                            features, labels = self.feature_generator.get_features_and_labels(email_file)
+                            if not features:
+                                print "Skipped", email_file
+                                continue
+                            print >> features_file_handle, self._get_feature_line(features)
+                            print >> emails_file_handle, email_file
+                            for label_name, values in labels.iteritems():
+                                if type(values) == str:
+                                    values = [values]
+                                print >> labels_file_handle, ", ".join([str(self.feature_to_id[label_name][value]) for value in values])
         
         with open(feature_mappings_file, 'w') as file_handle:
             for feature_id, feature_name in self.id_to_feature.iteritems():
                 print >> file_handle, str(feature_id) + ": " + feature_name
                 
 if __name__ == "__main__":
-    feature_generator = EmailFeatures()
-#    files = glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/dasovich-j/inbox/[12].")
-    files = glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/dasovich-j/inbox/*.")
-    # files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/beck-s/inbox/*."))
-    files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/lay-k/inbox/*."))
-    files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/jones-t/inbox/*."))
-    files.extend(glob.glob("/Users/arindam/workplace/CS499/enron_mail_20110402/maildir/skilling-j/inbox/*."))
-    snow_input_generator = SnowInputGenerator(files, feature_generator)
-    snow_input_generator.generate('train.snow', 'feature_id_to_string_mappings.snow', 'labels.snow')
+    import argparse
+    parser = argparse.ArgumentParser(description="Generates files for training on snow")
+    parser.add_argument("--named_entities", action="store_true", help="Use named entities as features. Have to pre-generate annotated email files.")
+    parser.add_argument("--tf_idf", action="store_true", help="Uses tf_idf of the words in the email as features")
+    parser.add_argument("--features_file", type=str, required=True, help="features file for snow")
+    parser.add_argument("--feature_mappings_file", type=str, required=True, help="feature id to value mappings file")
+    parser.add_argument("--labels_file", type=str, required=True, help="file to store the labels for the corresponding training file")
+    parser.add_argument("--emails_file", type=str, required=True, help="file to store the corresponding emails for the training file")
+    parser.add_argument("--email_dirs", required=True, nargs="+", help="Directories to scan for email files (non-recursive)")
+    args = parser.parse_args()
+    
+    feature_generator = EmailFeatures(args.named_entities, args.tf_idf)
+    snow_input_generator = SnowInputGenerator(args.email_dirs, feature_generator)
+    snow_input_generator.generate(args.features_file, args.feature_mappings_file, args.labels_file, args.emails_file)
     

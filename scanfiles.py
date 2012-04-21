@@ -1,9 +1,10 @@
 import os
 import sys
+import collections
 from email_handler import Email
 
 word_map = {}
-from_to_map = {}
+from_to_map = collections.defaultdict(lambda: collections.defaultdict(int))
 
 # MAX_FILES = 10000
 scan_counter = 0
@@ -29,22 +30,17 @@ def parsefile(filepath):
         else:
             word_map[word] = 1
                     
-    
     global from_to_map
              
-    if not (email.from_ in from_to_map):
-        from_to_map[email.from_] = set()
-    
-    from_to_map[email.from_].update(email.to_list)
-    from_to_map[email.from_].update(email.cc_list)
-    from_to_map[email.from_].update(email.bcc_list)
-        
+    recipients = email.to_list + email.cc_list + email.bcc_list
+    if len(recipients) == 1:
+        from_to_map[email.from_][recipients[0]] += 1
+       
     scan_counter += 1
 
 
 def recurse_into(level, name):
     return True
-    #return level < 2 or name == "inbox" or name == "sent"
 
 
 def scan(path, level):
@@ -66,7 +62,7 @@ def scan(path, level):
 def dump_word_map(word_map_csv):
     word_map_file = open(word_map_csv, 'w')
     global word_map
-    for k, v in word_map.items():
+    for k, v in word_map.iteritems():
         line = k + "," + str(v) + "\n"
         word_map_file.write(line)
     word_map_file.close()
@@ -75,10 +71,10 @@ def dump_word_map(word_map_csv):
 def dump_from_to_map(from_to_map_csv):
     from_to_map_file = open(from_to_map_csv, 'w')
     global from_to_map
-    for k, v in from_to_map.items():
-        line = k
-        for email in v:
-            line += "," + email
+    for email, tos in from_to_map.iteritems():
+        line = email
+        for to, freq in tos.iteritems():
+            line += "," + to + "," + str(freq)
         line += "\n"
         from_to_map_file.write(line)
     from_to_map_file.close()
@@ -94,9 +90,9 @@ def main():
     
     print >> sys.stderr, "counter: ", scan_counter, " files scanned\n"
 
-    print >> sys.stderr, "Dumping word map to csv file", word_map_csv, "..."
+    print >> sys.stderr, "Dumping word map to csv file", word_map_csv
     dump_word_map(word_map_csv)
-    print >> sys.stderr, "Dumping from_top map to csv file", from_to_map_csv, "..."
+    print >> sys.stderr, "Dumping from_to map to csv file", from_to_map_csv
     dump_from_to_map(from_to_map_csv)
 
 

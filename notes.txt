@@ -31,3 +31,8 @@ How many emails per folder (e.g. inbox, sent, discussion_items)
 
 Tests:
 Just change the name and see if the learner can detect that the message was actually intended for someone else
+
+
+Note:
+Handle emails with no recipients (nothing in the to fields)
+Handle emails with multiple recipients (a lot in the to fields)

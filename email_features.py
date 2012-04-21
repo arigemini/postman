@@ -3,8 +3,10 @@ import collections
 
 class EmailFeatures(object):
  
-    def __init__(self):
-        self.types = {"ORG", "PER", "LOC"}
+    def __init__(self, named_entities, tf_idf):
+        self.types = {"ORG", "PER", "LOC", "MISC"}
+        self.named_entities = named_entities
+        self.tf_idf = tf_idf
         pass
     
     def process_annotated_line(self, prefix, line):
@@ -48,6 +50,9 @@ class EmailFeatures(object):
                 
         return self.features
     
+    def get_features_tf_idf(self, message):
+        raise NotImplementedError, "TF-IDF has not been implemented"
+    
     def get_features_and_labels(self, email_file):
         email = Email(email_file) 
         actual_message = email.remove_original_message
@@ -62,8 +67,13 @@ class EmailFeatures(object):
             while actual_message[end].isalpha():
                 end += 1
             features['toInfo'] = actual_message[idx + 3: end]
-        # features.update(self.get_features_from_annotated_file(email_file))
+        if self.named_entities:
+            features.update(self.get_features_from_annotated_file(email_file))
+        if self.tf_idf:
+            features.update(self.get_features_tf_idf(actual_message))
         labels = {'to': email.to_list[0]} if email.to_list else {'to': []}
+        if not email.to_list or len(email.to_list) > 1:
+            return None, None
         return features, labels
 
 if __name__ == "__main__":
