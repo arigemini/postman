@@ -2,99 +2,61 @@ import os
 import sys
 import collections
 from email_handler import Email
-
-word_map = {}
-from_to_map = collections.defaultdict(lambda: collections.defaultdict(int))
-
-# MAX_FILES = 10000
-scan_counter = 0
+from analysis.email_dir_scanner import EmailDirScanner
 
 
-def parsefile(filepath):
-    global scan_counter
-    
-    #if scan_counter == MAX_FILES: # Limit the total number of files scanned
-    #     return
-    
-    if scan_counter % 1000 == 0:
-        print "********* File ", scan_counter, ": ", filepath, " *************\n"
-         
-    email = Email(filepath)
+class WordAndFromToAnalysis:
+    def __init__(self, email_dir):
+        self.scan_counter = 0
+        self.word_map = collections.defaultdict(int)
+        self.email_from_to_list = []
+        email_dir_scanner = EmailDirScanner(email_dir, self._should_recurse, self._parse_email)
+        email_dir_scanner.scan()
         
-    global word_map
+    def dump_word_map(self, word_map_csv):
+        with open(word_map_csv, 'w') as f:
+            for k, v in self.word_map.iteritems():
+                print >> f, "{0},{1}".format(k, v)
     
-    for word in email.message.split():
-        word = word.strip(',.').lower()
-        if word in word_map:
-            word_map[word] = word_map[word] + 1
-        else:
-            word_map[word] = 1
-                    
-    global from_to_map
+    def dump_email_from_to_list(self, email_from_to_list_csv):
+        with open(email_from_to_list_csv, 'w') as f:
+            for email, from_, to in self.email_from_to_list:
+                print >> f, "{0},{1},{2}".format(email, from_, to)        
+    
+    def _should_recurse(self, level, dirname, fullpath):
+        # return True
+        return self.scan_counter < 1000
+   
+    def _parse_email(self, email_file):
+        if self.scan_counter % 1000 == 0:
+            print "********* File ", self.scan_counter, ": ", email_file, " *************\n"
              
-    recipients = email.to_list + email.cc_list + email.bcc_list
-    if len(recipients) == 1:
-        from_to_map[email.from_][recipients[0]] += 1
-       
-    scan_counter += 1
-
-
-def recurse_into(level, name):
-    return True
-
-
-def scan(path, level):
-    listing = os.listdir(path) 
-    
-    global scan_counter
-    
-    for files in listing:
-        fullpath = os.path.join(path, files)
-        if os.path.isdir(fullpath):
-            if recurse_into(level, files):
-                scan(fullpath, level + 1)
-        elif level > 1 and files[0] != '.':
-            parsefile(fullpath)
-        # if scan_counter >= MAX_FILES:
-        #     break
-   
-   
-def dump_word_map(word_map_csv):
-    word_map_file = open(word_map_csv, 'w')
-    global word_map
-    for k, v in word_map.iteritems():
-        line = k + "," + str(v) + "\n"
-        word_map_file.write(line)
-    word_map_file.close()
-    
-    
-def dump_from_to_map(from_to_map_csv):
-    from_to_map_file = open(from_to_map_csv, 'w')
-    global from_to_map
-    for email, tos in from_to_map.iteritems():
-        line = email
-        for to, freq in tos.iteritems():
-            line += "," + to + "," + str(freq)
-        line += "\n"
-        from_to_map_file.write(line)
-    from_to_map_file.close()
-        
-
-def main():
-    email_path = '/Users/arindam/workplace/CS499/enron_mail_20110402/maildir'
-    word_map_csv = 'etc/word_map.csv'
-    from_to_map_csv = 'etc/from_to_map.csv'
-
-    global scan_counter
-    scan(email_path, 0)
-    
-    print >> sys.stderr, "counter: ", scan_counter, " files scanned\n"
-
-    print >> sys.stderr, "Dumping word map to csv file", word_map_csv
-    dump_word_map(word_map_csv)
-    print >> sys.stderr, "Dumping from_to map to csv file", from_to_map_csv
-    dump_from_to_map(from_to_map_csv)
+        email = Email(email_file)
+                    
+        for word in email.message.split():
+            word = word.strip(',.').lower()
+            self.word_map[word] += 1
+                        
+        if len(email.to_list) == 1:
+            self.email_from_to_list.append((email_file, email.from_, email.to_list[0]))
+           
+        self.scan_counter += 1
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    import os
+    
+    parser = argparse.ArgumentParser(description="Generate (word,frequency) and (email_file,from,to) files by scanning the email directory provided")
+    parser.add_argument("--email_dir", type=str, required=True, help="Directory to scan for email files (recursive)")
+    parser.add_argument("--word_map_file", type=str, required=True, help="(word, freq) file")
+    parser.add_argument("--email_from_to_file", type=str, required=True, help="(email,from,to) file")
+    args = parser.parse_args()
+    
+    word_and_from_to_analysis = WordAndFromToAnalysis(args.email_dir)
+    
+    print >> sys.stderr, "Dumping word map to csv file", args.word_map_file
+    word_and_from_to_analysis.dump_word_map(args.word_map_file)
+    print >> sys.stderr, "Dumping email_from_to list to csv file", args.email_from_to_file
+    word_and_from_to_analysis.dump_email_from_to_list(args.email_from_to_file)
+   
