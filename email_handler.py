@@ -14,17 +14,26 @@ class Email:
     def __init__(self, filepath):
         self.filepath = filepath
         
-        self.from_ = ""
-        
+        self.from_ = ""       
         self.subject = ""
-        
         self.to_list = []
         self.cc_list = []
         self.bcc_list = []
-        
         self.message = ""
+        
         self._actual_message = None
         self._parseFile()
+        
+    @property
+    def actual_message(self):
+        if self._actual_message:
+            return self._actual_message
+        self._actual_message = self.message
+        for delim in Email.ACTUAL_MESSAGE_DELIMITERS:
+            idx = self._actual_message.find(delim)
+            if idx != -1:
+                self._actual_message = self._actual_message[:idx].strip('-').strip()
+        return self._actual_message
         
     def _parseFile(self):
         
@@ -51,17 +60,6 @@ class Email:
         self.message = msg.get_payload().strip()
         
         infile.close()
-        
-    @property
-    def actual_message(self):
-        if self._actual_message:
-            return self._actual_message
-        self._actual_message = self.message
-        for delim in Email.ACTUAL_MESSAGE_DELIMITERS:
-            idx = self._actual_message.find(delim)
-            if idx != -1:
-                self._actual_message = self._actual_message[:idx].strip('-').strip()
-        return self._actual_message
         
 
 if __name__ == "__main__":
