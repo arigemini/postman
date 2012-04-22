@@ -25,5 +25,5 @@ if __name__ == "__main__":
     def display_email(emailpath):
         print emailpath
     
-    email_dir_scanner = EmailDirScanner('{0}/enron_mail_20110402/maildir/'.format(os.getenv('HOME')), should_recurse, display_email)
+    email_dir_scanner = EmailDirScanner(os.path.join(os.getenv('HOME'), 'enron_mail_20110402/maildir/'), should_recurse, display_email)
     email_dir_scanner.scan()
