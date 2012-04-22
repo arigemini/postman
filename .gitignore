@@ -3,3 +3,5 @@
 *.swp
 *.snow
 /etc
+/etc_backup
+/backup
