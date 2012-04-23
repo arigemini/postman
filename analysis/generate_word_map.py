@@ -25,9 +25,10 @@ class WordMap:
              
         email = Email(email_file)
                     
-        for word in email.message.split():
+        for word in email.actual_message.split():
             word = word.strip(',.').lower()
-            self.word_map[word] += 1
+            if word:
+                self.word_map[word] += 1
                         
         self.scan_counter += 1
 
