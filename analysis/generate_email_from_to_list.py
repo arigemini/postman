@@ -15,9 +15,9 @@ class EmailFromToList:
                 print >> f, "{0},{1},{2}".format(email, from_, to)        
     
     def _should_recurse(self, level, dirname, fullpath):
-        return level == 0 or (dirname in ["inbox", "deleted_items"])
+        return level == 0 or dirname == "inbox"
+        # return level == 0 or (dirname in ["inbox", "deleted_items"])
         # return level == 0 or (dirname not in ["sent", "sent_items", "_sent_mail", "all_documents"])
-        # return level == 0 or dirname == "inbox"
         # return self.scan_counter < 1000
    
     def _parse_email(self, email_file):
