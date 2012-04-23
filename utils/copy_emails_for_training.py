@@ -33,8 +33,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     # Sorted in decreasing number of incoming emails
-    email_ids = ['pete.davis@enron.com',
-                 'gerald.nemec@enron.com',
+    email_ids = ['gerald.nemec@enron.com',
                  'kenneth.lay@enron.com',
                  'sara.shackleton@enron.com',
                  'jeff.skilling@enron.com',
@@ -52,7 +51,8 @@ if __name__ == "__main__":
                  'j.kaminski@enron.com',
                  'elizabeth.sager@enron.com',
                  'don.baughman@enron.com',
-                 'kam.keiser@enron.com']   
+                 'kam.keiser@enron.com',
+                 'jason.wolfe@enron.com']
     
     copy_emails = CopyEmails(args.email_from_to_file)
     copy_emails.process(set(email_ids), args.output_dir)
