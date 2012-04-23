@@ -16,13 +16,6 @@ class SimpleFeatures(object):
                                         map(lambda x: x.strip(string.punctuation), 
                                                 split_message[:3]))
         
-        for ending in SimpleFeatures.ENDINGS:    
-            idx = actual_message.find(ending)
-            if idx != -1:
-                splits = actual_message[idx + len(ending) + 1:].strip().split()
-                if 0 < len(splits) < 4:
-                    features['senderInfo'] = " ".join(splits)
-                    break
        
         return features
 
