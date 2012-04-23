@@ -1,6 +1,8 @@
 import string
 
 class SimpleFeatures(object):
+    
+    GREETINGS = ["Hi", "Hello", "Dear", "Hey"]
         
     def __init__(self):
         pass
@@ -13,7 +15,13 @@ class SimpleFeatures(object):
         features['first-3'] = filter(lambda x: x and x not in ["Hi", "Hello", "Dear", "Hey"] and x[0].isupper(),
                                         map(lambda x: x.strip(string.punctuation), 
                                                 split_message[:3]))
-        
+        break_pos = -1
+        for ch in actual_message:
+            break_pos += 1
+            if ch == '\n' or ch in string.punctuation:
+                break
+        if break_pos < 12:
+            features['start'] = " ".join(actual_message[:break_pos].split()) 
        
         return features
 
