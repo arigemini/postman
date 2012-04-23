@@ -12,16 +12,25 @@ class SimpleFeatures(object):
         actual_message = email.actual_message
         
         split_message = actual_message.split()
-        features['first-3'] = filter(lambda x: x and x not in ["Hi", "Hello", "Dear", "Hey"] and x[0].isupper(),
+        features['first-3'] = filter(lambda x: x and x[0].isupper(),
                                         map(lambda x: x.strip(string.punctuation), 
                                                 split_message[:3]))
-        break_pos = -1
-        for ch in actual_message:
-            break_pos += 1
-            if ch == '\n' or ch in string.punctuation:
-                break
-        if break_pos < 12:
-            features['start'] = " ".join(actual_message[:break_pos].split()) 
+        
+        # Try to get the toInfo from an email, by checking if the email starts
+        # with a greeting or just the name of the person
+        toInfo = None
+        if len(split_message) > 1 and actual_message[len(split_message[0])] in "\n,":
+            toInfo = split_message[0].strip(string.punctuation)
+        else:
+            for greeting in SimpleFeatures.GREETINGS:
+                if actual_message.startswith(greeting):
+                    pos = len(greeting) + 1;
+                    while actual_message[pos].isalpha():
+                        pos += 1
+                    toInfo = actual_message[len(greeting) + 1:pos]
+                    break
+        if toInfo:
+            features['toInfo'] = toInfo
        
         return features
 
