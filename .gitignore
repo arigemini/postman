@@ -2,6 +2,7 @@
 *~
 *.swp
 *.snow
+gmon.out
 /etc
 /etc_backup
 /backup
