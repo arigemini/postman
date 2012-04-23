@@ -25,11 +25,11 @@ class SimpleFeatures(object):
             for greeting in SimpleFeatures.GREETINGS:
                 if actual_message.startswith(greeting):
                     pos = len(greeting) + 1;
-                    while actual_message[pos].isalpha():
+                    while pos < len(actual_message) and actual_message[pos].isalpha():
                         pos += 1
                     toInfo = actual_message[len(greeting) + 1:pos]
                     break
-        if toInfo:
+        if toInfo and toInfo not in ["Thanks", "thanks", "OK", "ok", "FYI"] + SimpleFeatures.GREETINGS:
             features['toInfo'] = toInfo
        
         return features
