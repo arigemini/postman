@@ -7,14 +7,8 @@ import os
 
 class SnowInputGenerator(object):
        
-    def init_state(self):
-        self.label_to_id = dict()
-        self.feature_to_id = dict()
-        self.id_to_value = dict()
-        self.next_id = 0      
-    
     def generate(self, email_dirs, email_features, training_file, emails_file, id_mappings_file):
-        self.init_state()
+        self._init_state()
         email_counter, skipped_counter = 0, 0
         with open(training_file, 'w') as training_file_handle:
             with open(emails_file, 'w') as emails_file_handle:
@@ -38,6 +32,12 @@ class SnowInputGenerator(object):
                 print >> id_mappings_file_handle, "{0}: {1}".format(feature_id, feature_value)
         
         print "Total emails: {0} Used: {1} Skipped: {2}".format(email_counter + skipped_counter, email_counter, skipped_counter)
+     
+    def _init_state(self):
+        self.label_to_id = dict()
+        self.feature_to_id = dict()
+        self.id_to_value = dict()
+        self.next_id = 0      
                 
     def _get_training_line(self, label, features):
         training_line = [self._get_label_id(label)]
