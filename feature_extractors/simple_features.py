@@ -1,9 +1,7 @@
 import string
 
 class SimpleFeatures(object):
-    
-    ENDINGS = ["Thanks", "Regards", "Best"]
-    
+        
     def __init__(self):
         pass
     
