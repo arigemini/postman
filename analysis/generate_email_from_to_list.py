@@ -26,7 +26,7 @@ class EmailFromToList:
              
         email = Email(email_file)
        
-        if len(email.to_list) == 1:
+        if len(email.to_list) == 1 and email.from_ != email.to_list[0]:
             self.email_from_to_list.append((email_file, email.from_, email.to_list[0]))
            
         self.scan_counter += 1
