@@ -58,7 +58,7 @@ class SnowInputGenerator(object):
             assert type(self.feature_to_id[feature_type]) == dict
         else:
             self.feature_to_id[feature_type] = dict()
-        if type(feature_values) != list:
+        if type(feature_values) not in [list, set]:
             feature_values = [feature_values]               
         for value in feature_values:
             assert type(value) == str or (type(value) == tuple and len(value) == 2)
@@ -79,20 +79,23 @@ class SnowInputGenerator(object):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generates files for training on snow")
     parser.add_argument("--email_dirs", required=True, nargs="+", help="Directories to scan for email files (non-recursive)")
-    parser.add_argument("--named_entities", action="store_true", help="Use named entities as features. Have to pre-generate annotated email files.")
     parser.add_argument("--tf_idf", action="store_true", help="Uses tf_idf of the words in the email as features")
+    parser.add_argument("--named_entities", action="store_true", help="Use named entities as features. Have to pre-generate annotated email files.")
     parser.add_argument("--training_file", type=str, required=True, help="features file for snow")
     parser.add_argument("--emails_file", type=str, required=True, help="file to store the corresponding emails for the training file")
     parser.add_argument("--id_mappings_file", type=str, required=True, help="feature id to value mappings file")
 
     args = parser.parse_args()
     
+    def original_to_annotated(original):
+        return original.replace("training_input", "training_input_annotated") + "-annotated"
+    
     email_features = EmailFeatures()
     email_features.add_feature_extractor(SimpleFeatures())
-    if args.named_entities:
-        email_features.add_feature_extractor(NEFeatures())
     if args.tf_idf:
-        email_features.add_feature_extractor(TFIDFFeatures())
+        email_features.add_feature_extractor(TFIDFFeatures("etc/word_map_training.csv"))
+    if args.named_entities:
+        email_features.add_feature_extractor(NEFeatures(original_to_annotated))
     
     SnowInputGenerator().generate(args.email_dirs, email_features, args.training_file, args.emails_file, args.id_mappings_file)
     
