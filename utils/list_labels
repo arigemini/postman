@@ -1,0 +1,3 @@
+#!/bin/bash
+
+tr -d ':' | awk -F ',' '{print $1}' | sort -n | uniq | xargs | tr ' ' ','
