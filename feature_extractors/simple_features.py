@@ -9,11 +9,11 @@ class SimpleFeatures(object):
         features = {}
         features['from'] = email.from_
         features['subject'] = filter(lambda x: x not in ["RE", "FW", "Re"], 
-                                        map(lambda x: x.strip(string.punctuation), 
-                                                email.subject.split()))
+                                      map(lambda x: x.strip(string.punctuation), 
+                                            email.subject.split()))
         features['first-3'] = filter(lambda x: x and x[0].isupper(),
-                                        map(lambda x: x.strip(string.punctuation), 
-                                                email.actual_message.split()[:3]))
+                                       map(lambda x: x.strip(string.punctuation), 
+                                               email.actual_message.split()[:3]))
         return features
 
 if __name__ == "__main__":
