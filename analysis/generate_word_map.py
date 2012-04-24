@@ -13,7 +13,7 @@ class WordMap:
     def dump(self, word_map_csv):
         with open(word_map_csv, 'w') as f:
             for k, v in self.word_map.iteritems():
-                print >> f, "{0},{1}".format(k, v)  
+                print >> f, "{0},{1}".format(v, k)  
     
     def _should_recurse(self, level, dirname, fullpath):
         return True
@@ -21,7 +21,7 @@ class WordMap:
    
     def _parse_email(self, email_file):
         if self.scan_counter % 1000 == 0:
-            print "********* File ", self.scan_counter, ": ", email_file, " *************\n"
+            print "********* File ", self.scan_counter, ": ", email_file, " *************"
              
         email = Email(email_file)
                     
@@ -36,7 +36,7 @@ class WordMap:
 if __name__ == "__main__":
     import argparse
     
-    parser = argparse.ArgumentParser(description="Generate (word,frequency) file by scanning the email directory provided")
+    parser = argparse.ArgumentParser(description="Generate (frequency, word) file by scanning the email directory provided")
     parser.add_argument("--email_dir", type=str, required=True, help="Directory to scan for email files (recursive)")
     parser.add_argument("--word_map_file", type=str, required=True, help="(word, freq) file")
     args = parser.parse_args()
