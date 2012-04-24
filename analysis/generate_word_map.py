@@ -1,6 +1,7 @@
 import collections
 from email_handler import Email
 from analysis.email_dir_scanner import EmailDirScanner
+import string
 
 
 class WordMap:
@@ -26,7 +27,7 @@ class WordMap:
         email = Email(email_file)
                     
         for word in email.actual_message.split():
-            word = word.strip(',.').lower()
+            word = word.strip(string.punctuation).lower()
             if word:
                 self.word_map[word] += 1
                         

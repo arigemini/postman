@@ -1,6 +1,10 @@
 import collections
+import string
 
 class TFIDFFeatures(object):
+    
+    THRESHOLD = 0.003
+    
     def __init__(self, word_map_csv_file):
         self.freq = {}
         with open(word_map_csv_file, 'r') as f:
@@ -13,17 +17,13 @@ class TFIDFFeatures(object):
         word_map = collections.defaultdict(int)
                
         for word in email.actual_message.split():
-            word = word.strip(',.').lower()
+            word = word.strip(string.punctuation).lower()
             if word:
                 word_map[word] += 1
                         
         for word, counter in word_map.iteritems():
-            if word not in self.freq:
-                features["words"].append((word, 1))
-            else:
-                ratio = float(counter) / self.freq[word]
-                if ratio > 0.01:
-                    features["words"].append(word)
+            if word not in self.freq or (float(counter) / self.freq[word]) > TFIDFFeatures.THRESHOLD:
+                features["words"].append(word)
                 
         return features
     
