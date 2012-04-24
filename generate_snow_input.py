@@ -58,7 +58,7 @@ class SnowInputGenerator(object):
             assert type(self.feature_to_id[feature_type]) == dict
         else:
             self.feature_to_id[feature_type] = dict()
-        if type(feature_values) == str:
+        if type(feature_values) != list:
             feature_values = [feature_values]               
         for value in feature_values:
             assert type(value) == str or (type(value) == tuple and len(value) == 2)
