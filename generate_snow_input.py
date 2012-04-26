@@ -15,12 +15,8 @@ class SnowInputGenerator(object):
                 for email_dir in email_dirs:
                     print "Processing email dir: [{0}]".format(email_dir)
                     for email_file in filter(lambda cur: os.path.isfile(cur), map(lambda cur: os.path.join(email_dir, cur), os.listdir(email_dir))):
-                        if (email_counter + skipped_counter) % 100 == 0:
-                            print "{0} -> {1}".format(email_counter + skipped_counter, email_file)
-                        # print "\tEmail: [{0}]".format(email_file)
                         features, label = email_features.get_features_and_label(email_file)
                         if not label or not features or len(features) == 0:
-                            # print "\tSkipped email [{0}]. label [{1}] features [{2}]".format(email_file, label, features)
                             skipped_counter += 1
                             continue
                         email_counter += 1
