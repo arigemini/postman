@@ -1,29 +1,24 @@
 import sys
 
 def main():
-    lines = []
-    max_id = -1
+    line_splits = []
     labels = set()
+    max_id = -1
     for line in sys.stdin:
-        line = line.strip()
-        lines.append(line)
-        splits = line.strip(":").split(",")
+        splits = line.strip().strip(":").split(",")
+        line_splits.append(splits)
         labels.add(splits[0])
         max_id = max(max_id, max(int(feature_id) for feature_id in splits))
-    yes = str(max_id + 1)
-    no = str(max_id + 2)
-    for line in lines:
-        splits = line.strip(":").split(",")
-        cur_label = splits[0]
-        print cur_label
-        print labels
-        print yes, no
+        
+    yes = max_id + 1
+    no = max_id + 2
+    
+    for splits in line_splits:
+        actual_label = splits[0]
         for label in labels:
-            put_label = yes if label == cur_label else no
             splits[0] = label
-            print "{0},{1}:".format(put_label, ",".join(splits))
-        
-        
+            new_label = yes if label == actual_label else no
+            print "{0},{1}:".format(new_label, ",".join(splits))
             
 if __name__ == "__main__":
     main()

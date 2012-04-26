@@ -1,10 +1,10 @@
 import sys
 import random
 
-def main(filename_prefix):
+def main(filename_suffix):
     NUM_FILES = 5
     
-    file_handles = [open(filename_prefix + "-" + str(i + 1), 'w') for i in xrange(NUM_FILES)]
+    file_handles = [open("{0}-{1}.snow".format(filename_suffix, i + 1), 'w') for i in xrange(NUM_FILES)]
     positions = [i for i in xrange(NUM_FILES)]
     counter = [0] * NUM_FILES
     
@@ -23,6 +23,6 @@ def main(filename_prefix):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print "usage: python", __file__, "<output_file_prefix>"
+        print "usage: python", __file__, "<output_file_suffix>"
         exit()
     main(sys.argv[1])
