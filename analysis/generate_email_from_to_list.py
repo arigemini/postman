@@ -22,7 +22,7 @@ class EmailFromToList:
    
     def _parse_email(self, email_file):
         if self.scan_counter % 1000 == 0:
-            print "********* File ", self.scan_counter, ": ", email_file, " *************\n"
+            print "********* File ", self.scan_counter, ": ", email_file, " *************"
              
         email = Email(email_file)
        

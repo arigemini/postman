@@ -2,7 +2,6 @@
 *~
 *.swp
 *.snow
+*.out
+*.csv
 gmon.out
-/etc
-/etc_backup
-/backup
