@@ -24,7 +24,7 @@ for email_ids in ${top5} ${top10} ${top20}; do
 	 
 	echo -e "\n  ** Testing with full training set **\n"
 	labels=$(cat train.snow | ./utils/list_labels)	  
-	for algorithm in W P; do  
+	for algorithm in W P B; do  
 		echo -e "\n    ** Testing with algorithm ${algorithm} **\n"	
 		~/Snow_v3.2/snow -train -I train.snow -F net.snow -${algorithm}:${labels}	    	
 		~/Snow_v3.2/snow -test -I train.snow -F net.snow
@@ -39,7 +39,7 @@ for email_ids in ${top5} ${top10} ${top20}; do
 		
 		labels=$(cat train-chunk.snow | ./utils/list_labels)
 		  
-		for algorithm in W P; do
+		for algorithm in W P B; do
 			echo -e "\n    ** Testing with algorithm ${algorithm} **\n"
 			~/Snow_v3.2/snow -train -I train-chunk.snow -F net.snow -${algorithm}:${labels}	    	
 			~/Snow_v3.2/snow -test -I ${test_chunk} -F net.snow
