@@ -66,101 +66,66 @@ The input data for developing the Customer Mix Algorithm consists of the Enron d
 
 \section{Statistics}
 
-The Enron dataset has  a total of 517424 emails across 150 accounts. Each account has messages grouped by various folder types (e.g. inbox, sent, etc...). We did an analysis of the distribution and the results are in the tables below.
-
-\begin{table}[ht]
-\caption{Emails per account statistics}
-\centering
-\begin{tabular}{c c c }
-\hline \hline
-Account & No. of emails & \% \\ [0.5ex]
-%heading
-\hline
-kaminski-v & 28465 & 1 \\
-dasovich-j & 28234 & 1 \\
-kean-s & 25351 & 1 \\
-mann-k & 23381 & 1 \\
-jones-t & 19950 & 1 \\
-shackleton-s & 18687 & 1 \\
-taylor-m & 13875 & 1 \\
-farmer-d & 13032 & 1 \\
-germany-c & 12436 & 1 \\
-beck-s & 11830 & 1 \\
-symes-k & 10827 & 1 \\
-nemec-g & 10655 & 1 \\
-scott-s & 8022 & 1 \\
-rogers-b & 8009 & 1 \\
-bass-e & 7823 & 1 \\
-sanders-r & 7329 & 1 \\
-campbell-l & 6490 & 1 \\
-shapiro-r & 6071 & 1 \\
-guzman-m & 6054 & 1 \\
-lay-k & 5937 & 1 \\
-\hline
-\end{tabular}
-\end{table}
+The Enron dataset has  a total of 517424 emails across 150 accounts. Each account has messages grouped by various folder types (e.g. inbox, sent, etc...). We did an analysis of the distribution and the results are in the tables below (we only show the top 20).
 
 \begin{table}
 \parbox{.45\linewidth}{
-\centering
 \begin{tabular}{c c c }
 \hline \hline
 Account & No. of emails & \% \\ [0.5ex]
 %heading
 \hline
-kaminski-v & 28465 & 1 \\
-dasovich-j & 28234 & 1 \\
-kean-s & 25351 & 1 \\
-mann-k & 23381 & 1 \\
-jones-t & 19950 & 1 \\
-shackleton-s & 18687 & 1 \\
-taylor-m & 13875 & 1 \\
-farmer-d & 13032 & 1 \\
-germany-c & 12436 & 1 \\
-beck-s & 11830 & 1 \\
-symes-k & 10827 & 1 \\
-nemec-g & 10655 & 1 \\
-scott-s & 8022 & 1 \\
-rogers-b & 8009 & 1 \\
-bass-e & 7823 & 1 \\
-sanders-r & 7329 & 1 \\
-campbell-l & 6490 & 1 \\
-shapiro-r & 6071 & 1 \\
-guzman-m & 6054 & 1 \\
-lay-k & 5937 & 1 \\
-\hline
-\end{tabular}
+kaminski-v & 28465 & 5.50 \\
+dasovich-j & 28234 & 5.46 \\
+kean-s & 25351 & 4.90 \\
+mann-k & 23381 & 4.52 \\
+jones-t & 19950 & 3.86 \\
+shackleton-s & 18687 & 3.61 \\
+taylor-m & 13875 & 2.68 \\
+farmer-d & 13032 & 2.52 \\
+germany-c & 12436 & 2.40 \\
+beck-s & 11830 & 2.29 \\
+symes-k & 10827 & 2.09 \\
+nemec-g & 10655 & 2.06 \\
+scott-s & 8022 & 1.55 \\
+rogers-b & 8009 & 1.55 \\
+bass-e & 7823 & 1.51 \\
+sanders-r & 7329 & 1.42 \\
+campbell-l & 6490 & 1.25 \\
+shapiro-r & 6071 & 1.17 \\
+guzman-m & 6054 & 1.17 \\
+lay-k & 5937 & 1.15 
+
+\\\end{tabular}
 \caption{Emails per directory}
 }
-\hfill
 \parbox{.45\linewidth}{
-\centering
 \begin{tabular}{c c c }
 \hline \hline
 Folder & No. of emails & \% \\ [0.5ex]
 %heading
 \hline
-all\_documents & 128103 & 1 \\
-discussion\_threads & 58609 & 1 \\
-sent & 57653 & 1 \\
-deleted\_items & 51356 & 1 \\
-inbox & 44871 & 1 \\
-sent\_items & 37935 & 1 \\
-notes\_inbox & 36666 & 1 \\
-\_sent\_mail & 30109 & 1 \\
-calendar & 6133 & 1 \\
-archiving & 4477 & 1 \\
-\_americas & 4021 & 1 \\
-personal & 2577 & 1 \\
-attachments & 2026 & 1 \\
-meetings & 1872 & 1 \\
-c & 1656 & 1 \\
-schedule\_crawler & 1398 & 1 \\
-chris\_stokley & 1252 & 1 \\
-logistics & 1192 & 1 \\
-archive & 1179 & 1 \\
-tw\_commercial\_group & 1159 & 1 \\
-\hline
+all\_documents & 128103 & 24.76 \\
+discussion\_threads & 58609 & 11.33 \\
+sent & 57653 & 11.14 \\
+deleted\_items & 51356 & 9.93 \\
+inbox & 44871 & 8.67 \\
+sent\_items & 37935 & 7.33 \\
+notes\_inbox & 36666 & 7.09 \\
+\_sent\_mail & 30109 & 5.82 \\
+calendar & 6133 & 1.19 \\
+archiving & 4477 & 0.87 \\
+\_americas & 4021 & 0.78 \\
+personal & 2577 & 0.50 \\
+attachments & 2026 & 0.39 \\
+meetings & 1872 & 0.36 \\
+c & 1656 & 0.32 \\
+schedule\_crawler & 1398 & 0.27 \\
+chris\_stokley & 1252 & 0.24 \\
+logistics & 1192 & 0.23 \\
+archive & 1179 & 0.23 \\
+tw\_commercial\_group & 1159 & 0.22 
+
 \end{tabular}
 \caption{Emails per folder}
 }
