@@ -58,15 +58,15 @@ A Customer Mix Algorithm (CMX) makes use of machine learning techniques to accur
 
 We use the Enron email dataset \cite{enrondataset} as our source of data. The next section presents various statistics about this large dataset of emails. \
 We use SNoW (Sparse Network of Winnows) \cite{snow} to do training on the data. SNoW has well-known machine learning algorithms already implemented, \
-namely Winnow, Perceptron and Naive Bayes, and is extremely efficient when training on large datasets. We also use the Illinois named entity tagger \cite{nertagger} to extract features from emails and use in  training. 
+namely Winnow, Perceptron and Naive Bayes, and is extremely efficient when training on large datasets. We also use the Illinois Named Entity Tagger \cite{nertagger} to extract features from emails for use in training. 
 
-\chapter{Analysis of the dataset}
+\chapter{The Training Dataset}
 
-The input data for developing the Customer Mix Algorithm consists of the Enron data set \cite{enrondataset}. It is a massive collection of emails sent between the Enron employees and in this chapter we present various statistics about the data.
+The input data for developing the Customer Mix Algorithm consists of the Enron data set \cite{enrondataset}. It is a massive collection of emails sent between the Enron employees and in this chapter we present an analysis of the data and the process of selecting a subset of  emails from the Enron dataset for training.
 
-\section{Statistics}
+\section{Enron Dataset Analysis}
 
-The Enron dataset has  a total of 517424 emails across 150 accounts. Each account has messages grouped by various folder types (e.g. inbox, sent, etc...). We did an analysis of the distribution and the results are in the tables below (we only show the top 20).
+The Enron dataset has  a total of 517424 emails across 150 accounts. Each account has messages grouped by various folder types (e.g. inbox, sent, etc...). We did an analysis of the distribution and the results are in tables ~\ref{table:person} and ~\ref{table:folder} (we only show the top 20).
 
 \begin{table}
 \parbox{.45\linewidth}{
@@ -98,6 +98,7 @@ lay-k & 5937 & 1.15
 
 \\\end{tabular}
 \caption{Emails per directory}
+\label{table:person}
 }
 \parbox{.45\linewidth}{
 \begin{tabular}{c c c }
@@ -128,23 +129,104 @@ tw\_commercial\_group & 1159 & 0.22
 
 \end{tabular}
 \caption{Emails per folder}
+\label{table:folder}
 }
 \end{table}
 
+\section{Filtering the Enron Dataset}
+
+There are a lot of emails in the Enron dataset and not all of them were suitable for use. So, we had to do some additional filtering and processing to create a dataset that is usable for evaluating the Customer Mix Algorithm.  We restricted our search to only the \emph{inbox} folders for each account and moreover, picked only those emails that had a single recipient specified in the \emph{to} field. Then, we picked the top 20 email ids in terms of incoming mails, to use as our dataset for the Customer Mix Algorithm. This ended up being a total of 5971 emails across 20 email ids. The number of emails per email id used as our training dataset is shown in table ~\ref{table:training-data}
+
+\begin{table}[!ht]
+\center
+\begin{tabular}{c c c }
+\hline \hline
+Email ID & No. of emails & \% \\
+%heading
+\hline
+gerald.nemec@enron.com & 677 & 11.34 \\
+kenneth.lay@enron.com & 608 & 10.18 \\
+sara.shackleton@enron.com & 453 & 7.59 \\
+jeff.skilling@enron.com & 420 & 7.03 \\
+jeff.dasovich@enron.com & 343 & 5.74 \\
+tana.jones@enron.com & 303 & 5.07 \\
+rick.buy@enron.com & 285 & 4.77 \\
+barry.tycholiz@enron.com & 280 & 4.69 \\
+lcampbel@enron.com & 271 & 4.54 \\
+tracy.geaccone@enron.com & 271 & 4.54 \\
+joe.parks@enron.com & 270 & 4.52 \\
+sally.beck@enron.com & 244 & 4.09 \\
+mark.whitt@enron.com & 235 & 3.94 \\
+matt.smith@enron.com & 210 & 3.52 \\
+kay.mann@enron.com & 199 & 3.33 \\
+j.kaminski@enron.com & 192 & 3.22 \\
+elizabeth.sager@enron.com & 191 & 3.20 \\
+don.baughman@enron.com & 185 & 3.10 \\
+kam.keiser@enron.com & 170 & 2.85 \\
+jason.wolfe@enron.com & 164 & 2.75 \\
+\end{tabular}
+\caption{Training Dataset}
+\label{table:training-data}
+\end{table}
+
+
 \chapter{Features}
-\section{Email fields}
+\label{chap:features}
+
+We had to carefully select the features in order for the Customer Mix Algorithm to be effective. Some of the features were directly available from the email files, \
+wheres for others we had to some pre-processing and use the output of other machine learning algorithms as inputs into our algorithm. Here are the features \
+that we finally ended up using.
+
+\section{Email Fields}
+\label{sec:email-fields}
+
+A sample email message is show in figure ~\ref{fig:sample-email}.
+We extract the \emph{from} and \emph{subject} fields from the message. We split the \emph{subject} on whitespace and use each token as a feature. This lets us relate this message to other messages that mights also have the same tokens in their subject line. In addition to that, we extract the first 3 words from the message, getting rid of any punctuations and include them as features if they start with an upper case. This is because a lot message start with a greeting, for example, "Hey Jack" or simply "Jeff", and so, this is an attempt to get the name of the person from the subject line and use it as a feature.
+
+\begin{figure}
+    \scalebox{0.75}{\centerline{\includegraphics{sample_email.pdf}}}
+    \caption{A sample email}
+    \label{fig:sample-email}
+\end{figure}
+
 \section{Named Entities}
-\section{TF-IDF}
+\label{sec:named-entities}
 
-\chapter{Learning Framework}
-\section{Email filtering}
+We use the named entities in the emails as features in the training process. To extract the named entities, we first extract the subject and body of the message into a separate file and then use that file as input to the Illinois Named Entity Tagger \cite{ner}. The tagger annotes the text in the file with \emph{ORG}, \emph{PER}, \emph{LOC} and \emph{MISC} tokens which means Organization, Person, Location and Miscellaneous Named Enity respectively. There are various configuration options provided by the Illinois Named Entity Tagger, that affect the tagging of input files. We chose the \emph{Config/allLayer1.config} because it was fast and performed well.
+
+The named entities have a high chance that they'll be specific to the recipient and hence, their addition to the feature set is an important factor in the Customer Mix Algorithm.
+
+\section{Term Frequency-Inverse Document Frequency}
+\label{sec:tf-idf}
+
+Term Frequency-Inverse Document Frequency or \emph{TF-IDF} is a well-known technique in information retrieval and is referred to in ~\cite{idf} and ~\cite{tf-idf}. \
+In this case, for each word in the email, we take the ratio of the total number of times the word occurs in the email to the total number of times the word occurs in the training dataset and use the word as a feature if the ratio is above a certain threshold. In this case, we set the threshold to 1/300. The rationale for the threshold being that atmost 300 emails will include a specific word as a feature and we have approximately 300 emails per incoming email address. So, there is high probability that if a word is specific to a user, it will be included as a feature.
+
+The TF-IDF is a very useful feature input to the Customer Mix Algorithm and this is because it might include tokens such as, oil, business, meeting, etc. which might strongly indicate the recipient of the message.
+
+
+\chapter{The Feature Generation Framework}
+
+The feature generation framework for the Customer Mix Algorithm is extremely flexible and can be easily to applied on any dataset. We are currently using the features described in chapter ~\ref{chap:features}, however, the framework makes it really easy to add other features or modify/remove existing features to evaluate performance.
+
 \section{Precomputation}
-\section{Generating training data}
-\section{Testing}
 
-\chapter{Results}
-\section{Methodology}
-\section{Statistics}
+Most of the features for a given email can be computed online, for example, the feature described in ~\ref{sec:email-fields}. However, there are certain features that might need precomputation either due to performance requirements or correctness.
+
+The Named Entities feature described in section ~\ref{sec:named-entities} needs to be pre-computed because it is expensive to generate them during every run. For this purpose, we extract the \emph{subject} and \emph{body} of every email in our training dataset and put them in a different file. Then we use a custom program that uses the Illinois Named Entity Tagger as a library to annotate the files. Thus, during training, for a given email file, we can simple look up the corresponding named-entity-annotated file and parse it to extract the features. This significantly reduces the time to generate features for training.
+
+The TF-IDF feature described in section ~\ref{sec:tf-idf} needs to be pre-computed too, since we want to have the total count of the word across all emails when deciding whether to include a specific word as a feature for the current email. For this, we extract every word from emails in our training dataset, and store that in a file. The TF-IDF feature loads that file when it is initialized and when presented with an email to generate features for, for every word, it takes the ratio of the frequency of the word in the email to the frequency of the word in the entire dataset and includes it if is above a certain threshold. It also includes the word if it has not seen the word at all in the entire dataset.
+
+\section{Generating features}
+
+The input to this step is directories to scan for email files, features to use and the output is a training file in a format that can be parsed by SNoW. \
+This means we output one line per email found. The line is a comma-separated list of integers and is terminated by a semicolon. Each integer uniquely identifies a feature that was produced during feature generation. The first element in the list is the label and is an id corresponding to the \emph{to} field in the email. 
+
+The main feature generator maintains a list of feature extractors. In our case, these are the ones described in chapter ~\ref{chap:features}. It passes on every email to each of the registered feature extractors and then combines the features returned by them, extracts the label from the \emph{to} field of the email and sends it back to yet another program that keeps a mapping of all the features that have been found so far and their respective ids and outputs the training line to a file that can be used for training later on. Thus, all we need to add another feature extractor is to add it to the list of feature extractors maintained by the main feature generator. This makes it really easy to try various features and see how it affects the performance of the Customer Mix Algorithm.
+
+\chapter{Evaluation}
+\section{Training and Testing}
+\section{Results}
 
 \chapter{Conclusion}
 \section{Summary}
@@ -167,7 +249,7 @@ Roberson, S.E. (2004),
 Understanding inverse document frequency: On theoretical arguments for IDF,
  \emph{Journal of Documentation, Vol. 60, No. 5. (2004), pp. 503-520}
 
-\bibitem{tfidf}
+\bibitem{tf-idf}
   Juan Ramos, 2003,
   \emph{Using TF-IDF to Determine World Relevance in Document Queries}
 
