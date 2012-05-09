@@ -66,7 +66,7 @@ The input data for developing the Customer Mix Algorithm consists of the Enron d
 
 \section{Enron Dataset Analysis}
 
-The Enron dataset has  a total of 517424 emails across 150 accounts. Each account has messages grouped by various folder types (e.g. inbox, sent, etc...). We did an analysis of the distribution and the results are in tables ~\ref{table:person} and ~\ref{table:folder} (we only show the top 20).
+The Enron dataset has  a total of 517424 emails across 150 accounts. Each account has messages grouped by various folder types (e.g. inbox, sent, etc...). We did an analysis of the distribution and the results are in tables~\ref{table:person} and~\ref{table:folder} (we only show the top 20).
 
 \begin{table}
 \parbox{.45\linewidth}{
@@ -95,7 +95,6 @@ campbell-l & 6490 & 1.25 \\
 shapiro-r & 6071 & 1.17 \\
 guzman-m & 6054 & 1.17 \\
 lay-k & 5937 & 1.15 
-
 \\\end{tabular}
 \caption{Emails per directory}
 \label{table:person}
@@ -126,7 +125,6 @@ chris\_stokley & 1252 & 0.24 \\
 logistics & 1192 & 0.23 \\
 archive & 1179 & 0.23 \\
 tw\_commercial\_group & 1159 & 0.22 
-
 \end{tabular}
 \caption{Emails per folder}
 \label{table:folder}
@@ -135,7 +133,7 @@ tw\_commercial\_group & 1159 & 0.22
 
 \section{Filtering the Enron Dataset}
 
-There are a lot of emails in the Enron dataset and not all of them were suitable for use. So, we had to do some additional filtering and processing to create a dataset that is usable for evaluating the Customer Mix Algorithm.  We restricted our search to only the \emph{inbox} folders for each account and moreover, picked only those emails that had a single recipient specified in the \emph{to} field. Then, we picked the top 20 email ids in terms of incoming mails, to use as our dataset for the Customer Mix Algorithm. This ended up being a total of 5971 emails across 20 email ids. The number of emails per email id used as our training dataset is shown in table ~\ref{table:training-data}
+There are a lot of emails in the Enron dataset and not all of them were suitable for use. So, we had to do some additional filtering and processing to create a dataset that is usable for evaluating the Customer Mix Algorithm.  We restricted our search to only the \emph{inbox} folders for each account and moreover, picked only those emails that had a single recipient specified in the \emph{to} field. Then, we picked the top 20 email ids in terms of incoming mails, to use as our dataset for the Customer Mix Algorithm. This ended up being a total of 5971 emails across 20 email ids. The number of emails per email id used as our training dataset is shown in table~\ref{table:training-data}
 
 \begin{table}[!ht]
 \center
@@ -174,17 +172,17 @@ jason.wolfe@enron.com & 164 & 2.75 \\
 \label{chap:features}
 
 We had to carefully select the features in order for the Customer Mix Algorithm to be effective. Some of the features were directly available from the email files, \
-wheres for others we had to some pre-processing and use the output of other machine learning algorithms as inputs into our algorithm. Here are the features \
+whereas for others we had to some pre-processing and use the output of other machine learning algorithms as inputs into our algorithm. Here are the features \
 that we finally ended up using.
 
 \section{Email Fields}
 \label{sec:email-fields}
 
-A sample email message is show in figure ~\ref{fig:sample-email}.
-We extract the \emph{from} and \emph{subject} fields from the message. We split the \emph{subject} on whitespace and use each token as a feature. This lets us relate this message to other messages that mights also have the same tokens in their subject line. In addition to that, we extract the first 3 words from the message, getting rid of any punctuations and include them as features if they start with an upper case. This is because a lot message start with a greeting, for example, "Hey Jack" or simply "Jeff", and so, this is an attempt to get the name of the person from the subject line and use it as a feature.
+A sample email message is show in figure~\ref{fig:sample-email}.
+We extract the \emph{from} and \emph{subject} fields from the message. We split the \emph{subject} on whitespace and use each token as a feature. This lets us relate this message to other messages that might also have the same tokens in their subject line. In addition to that, we extract the first 3 words from the message, getting rid of any punctuations and include them as features if they start with an upper case. This is because a lot of messages start with a greeting, for example, "Hey Jack" or simply "Jeff", and so, this is an attempt to get the name of the person from the subject line and use it as a feature.
 
 \begin{figure}
-    \scalebox{0.75}{\centerline{\includegraphics{sample_email.pdf}}}
+    \scalebox{0.75}{\centerline{\includegraphics{sample_email_cropped.pdf}}}
     \caption{A sample email}
     \label{fig:sample-email}
 \end{figure}
@@ -192,45 +190,241 @@ We extract the \emph{from} and \emph{subject} fields from the message. We split 
 \section{Named Entities}
 \label{sec:named-entities}
 
-We use the named entities in the emails as features in the training process. To extract the named entities, we first extract the subject and body of the message into a separate file and then use that file as input to the Illinois Named Entity Tagger \cite{ner}. The tagger annotes the text in the file with \emph{ORG}, \emph{PER}, \emph{LOC} and \emph{MISC} tokens which means Organization, Person, Location and Miscellaneous Named Enity respectively. There are various configuration options provided by the Illinois Named Entity Tagger, that affect the tagging of input files. We chose the \emph{Config/allLayer1.config} because it was fast and performed well.
+We use the named entities in the emails as features in the training process. To extract the named entities, we first extract the subject and body of the message into a separate file and then use that file as input to the Illinois Named Entity Tagger \cite{ner}. The tagger annotes the text in the file with \emph{ORG}, \emph{PER}, \emph{LOC} and \emph{MISC} tokens which means Organization, Person, Location and Miscellaneous Named Enity respectively. There are various configuration options provided by the Illinois Named Entity Tagger that affect the tagging of input files. We chose the \emph{Config/allLayer1.config} because it was fast and performed well.
 
 The named entities have a high chance that they'll be specific to the recipient and hence, their addition to the feature set is an important factor in the Customer Mix Algorithm.
 
 \section{Term Frequency-Inverse Document Frequency}
 \label{sec:tf-idf}
 
-Term Frequency-Inverse Document Frequency or \emph{TF-IDF} is a well-known technique in information retrieval and is referred to in ~\cite{idf} and ~\cite{tf-idf}. \
+Term Frequency-Inverse Document Frequency or \emph{TF-IDF} is a well-known technique in information retrieval and is referred to in~\cite{idf} and~\cite{tf-idf}. \
 In this case, for each word in the email, we take the ratio of the total number of times the word occurs in the email to the total number of times the word occurs in the training dataset and use the word as a feature if the ratio is above a certain threshold. In this case, we set the threshold to 1/300. The rationale for the threshold being that atmost 300 emails will include a specific word as a feature and we have approximately 300 emails per incoming email address. So, there is high probability that if a word is specific to a user, it will be included as a feature.
 
 The TF-IDF is a very useful feature input to the Customer Mix Algorithm and this is because it might include tokens such as, oil, business, meeting, etc. which might strongly indicate the recipient of the message.
 
 
 \chapter{The Feature Generation Framework}
+\label{chap:feature-generation-framework}
 
-The feature generation framework for the Customer Mix Algorithm is extremely flexible and can be easily to applied on any dataset. We are currently using the features described in chapter ~\ref{chap:features}, however, the framework makes it really easy to add other features or modify/remove existing features to evaluate performance.
+The feature generation framework for the Customer Mix Algorithm is extremely flexible and can be easily to applied on any dataset. We are currently using the features described in chapter~\ref{chap:features}, however, the framework makes it really easy to add other features or modify/remove existing features to evaluate performance.
 
 \section{Precomputation}
 
-Most of the features for a given email can be computed online, for example, the feature described in ~\ref{sec:email-fields}. However, there are certain features that might need precomputation either due to performance requirements or correctness.
+Most of the features for a given email can be computed online, for example, the feature described in~\ref{sec:email-fields}. However, there are certain features that might need precomputation either due to performance requirements or correctness.
 
-The Named Entities feature described in section ~\ref{sec:named-entities} needs to be pre-computed because it is expensive to generate them during every run. For this purpose, we extract the \emph{subject} and \emph{body} of every email in our training dataset and put them in a different file. Then we use a custom program that uses the Illinois Named Entity Tagger as a library to annotate the files. Thus, during training, for a given email file, we can simple look up the corresponding named-entity-annotated file and parse it to extract the features. This significantly reduces the time to generate features for training.
+The Named Entities feature described in section~\ref{sec:named-entities} needs to be pre-computed because it is expensive to generate them during every run. For this purpose, we extract the \emph{subject} and \emph{body} of every email in our training dataset and put them in a different file. Then we use a custom program that uses the Illinois Named Entity Tagger as a library to annotate the files. Thus, during training, for a given email file, we can look up the corresponding named-entity-annotated file and parse it to extract the features. This significantly reduces the time to generate features for training.
 
-The TF-IDF feature described in section ~\ref{sec:tf-idf} needs to be pre-computed too, since we want to have the total count of the word across all emails when deciding whether to include a specific word as a feature for the current email. For this, we extract every word from emails in our training dataset, and store that in a file. The TF-IDF feature loads that file when it is initialized and when presented with an email to generate features for, for every word, it takes the ratio of the frequency of the word in the email to the frequency of the word in the entire dataset and includes it if is above a certain threshold. It also includes the word if it has not seen the word at all in the entire dataset.
+The TF-IDF feature described in section~\ref{sec:tf-idf} needs to be pre-computed too, since we want to have the total count of the word across all emails when deciding whether to include a specific word as a feature for the current email. For this, we extract every word from emails in our training dataset, and store that in a file. The TF-IDF feature loads that file when it is initialized and when presented with an email to generate features for, for every word, it takes the ratio of the frequency of the word in the email to the frequency of the word in the entire dataset and includes it if is above a certain threshold. It also includes the word if it has not seen the word at all in the entire dataset.
 
 \section{Generating features}
 
 The input to this step is directories to scan for email files, features to use and the output is a training file in a format that can be parsed by SNoW. \
 This means we output one line per email found. The line is a comma-separated list of integers and is terminated by a semicolon. Each integer uniquely identifies a feature that was produced during feature generation. The first element in the list is the label and is an id corresponding to the \emph{to} field in the email. 
 
-The main feature generator maintains a list of feature extractors. In our case, these are the ones described in chapter ~\ref{chap:features}. It passes on every email to each of the registered feature extractors and then combines the features returned by them, extracts the label from the \emph{to} field of the email and sends it back to yet another program that keeps a mapping of all the features that have been found so far and their respective ids and outputs the training line to a file that can be used for training later on. Thus, all we need to add another feature extractor is to add it to the list of feature extractors maintained by the main feature generator. This makes it really easy to try various features and see how it affects the performance of the Customer Mix Algorithm.
+The main feature generator maintains a list of feature extractors. In our case, these are the ones described in chapter~\ref{chap:features}. It passes on every email to each of the registered feature extractors and then combines the features returned by them, extracts the label from the \emph{to} field of the email and sends it back to yet another program that keeps a mapping of all the features that have been found so far and their respective ids and outputs the training line to a file that can be used for training later on. Thus, all we need to add another feature extractor is to add it to the list of feature extractors maintained by the main feature generator. This makes it really easy to try various features and see how it affects the performance of the Customer Mix Algorithm.
 
 \chapter{Evaluation}
+\label{chap:evaluation}
+
+We use SNoW~\cite{snow} for our Customer Mix Algorithm. SNoW supports well-known machine learning techniques such as, Perceptron, Winnow and Naive Bayes, and is extremely efficient when training with lots of features.
+
 \section{Training and Testing}
-\section{Results}
+
+We do training and testing with input data of varying sizes and different algorithms to compare the results with each other. We first take the top 5 email ids from the list in table~\ref{table:training-data}. Then, we run it through the Feature Generation Framework described in chapter~\ref{chap:feature-generation-framework} to get a training file that can be used as input to SNoW. We first train and test on the entire training file to see how well it learned the training set. Then, we split the data randomly into 5 chunks and do 5 rounds of training/testing in which we train on 4 chunks and test on the remaining chunk. We do training using Winnow, Perceptron and Naive Bayes. Then, we repeat the same thing with the top 10 email ids  and then the top 20 email ids. The results are reported in tables~\ref{table:normal-top5},~\ref{table:normal-top10} and~\ref{table:normal-top20}. (The top row in each table indicates testing with the full training set and each of the subsequent rows indicate testing with each of the 5 chunks).
+
+\begin{table}
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+All & 95.72 & 64.09 & 92.60 \\
+C1 & 45.60 & 69.40 & 70.80 \\
+C2 & 63.00 & 77.40 & 72.20 \\
+C3 & 74.65 & 77.45 & 75.45 \\
+C4 & 60.20 & 73.80 & 75.00 \\
+C5 & 83.60 & 73.80 & 72.40 \\
+\end{tabular}
+\caption{Accuracy: Top 5}
+\label{table:normal-top5}
+}
+\hfill
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+All & 92.99 & 62.18 & 91.41 \\
+C1 & 82.74 & 72.51 & 65.47 \\
+C2 & 79.92 & 70.33 & 65.47 \\
+C3 & 77.88 & 67.77 & 67.26 \\
+C4 & 71.90 & 69.48 & 66.03 \\
+C5 & 76.73 & 68.29 & 67.52 \\
+\end{tabular}
+\caption{Accuracy: Top 10}
+\label{table:normal-top10}
+}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+All & 90.44 & 58.88 & 90.82 \\
+C1 & 75.38 & 65.24 & 58.79 \\
+C2 & 76.05 & 66.50 & 60.39 \\
+C3 & 79.90 & 66.33 & 58.04 \\
+C4 & 78.48 & 65.66 & 58.54 \\
+C5 & 75.15 & 61.26 & 58.49 \\
+\end{tabular}
+\caption{Accuracy: Top 20}
+\label{table:normal-top20}
+\end{table}
+
+We also modelled it as a binary classificaion problem in which the label is either \emph{yes} or \emph{no} based on whether the email is intended to the recipient specified in the \emph{to} field. The emails in our training dataset are all \emph{yes} examples. Hence, we artifically create \emph{no} examples by modifying the \emph{to} field in the emails and we modify it to each of the other email ids in our training set. The results are reported in tables~\ref{table:binary-top5},~\ref{table:binary-top10} and~\ref{table:binary-top20}.
+
+\begin{table}
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+All & 67.96 & 68.69 & 73.83 \\
+C1 & 68.33 & 66.37 & 30.59 \\
+C2 & 67.61 & 66.17 & 24.83 \\
+C3 & 66.77 & 65.85 & 26.23 \\
+C4 & 68.29 & 62.38 & 29.63 \\
+C5 & 69.65 & 62.50 & 38.30 \\
+\end{tabular}
+\caption{Accuracy: Top 5 (Binary)}
+\label{table:binary-top5}
+}
+\hfill
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+All & 81.66 & 82.55 & 81.20 \\
+C1 & 82.13 & 81.90 & 52.19 \\
+C2 & 84.58 & 80.85 & 56.74 \\
+C3 & 83.98 & 82.93 & 64.02 \\
+C5 & 82.54 & 82.80 & 57.30 \\
+C6 & 84.36 & 81.83 & 52.52 \\
+\end{tabular}
+\caption{Accuracy: Top 10 (Binary)}
+\label{table:binary-top10}
+}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+All & 91.02 & 91.12 & 84.55 \\
+C1 & 91.21 & 91.35 & 74.97 \\
+C2 & 91.64 & 90.98 & 73.93 \\
+C3 & 91.67 & 91.19 & 66.12 \\
+C4 & 91.96 & 91.89 & 73.99 \\
+C5 & 90.79 & 89.73 & 69.63 \\
+\end{tabular}
+\caption{Accuracy: Top 20 (Binary)}
+\label{table:binary-top20}
+\end{table}
+
+We also evaluated how the algorithms performed when it learnt incrementally during the cross-validation process and the accuracy figures are shown in tables \ref{table:incremental-top5},~\ref{table:incremental-top10} and~\ref{table:incremental-top20}.
+
+\begin{table}
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+C1 & 87.80 & 86.40 & 73.20  \\
+C2 & 87.03 & 86.03 & 75.45  \\
+C3 & 85.60 & 87.00 & 72.20  \\
+C4 & 87.00 & 84.80 & 74.60  \\
+C5 & 87.00 & 87.40 & 71.60  \\
+\end{tabular}
+\caption{Accuracy: Top 5 (Incremental)}
+\label{table:incremental-top5}
+}
+\hfill
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+C1 & 82.35 & 82.99 & 65.98  \\
+C2 & 82.48 & 79.92 & 66.11  \\
+C3 & 86.33 & 84.29 & 71.14  \\
+C4 & 81.33 & 81.97 & 67.26  \\
+C5 & 84.40 & 84.91 & 67.26  \\
+\end{tabular}
+\caption{Accuracy: Top 10 (Incremental)}
+\label{table:incremental-top10}
+}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{c | c c c}
+\hline \hline
+ & Winnow & Perceptron & Naive Bayes \\ [0.5ex]
+%heading
+\hline
+C1 & 78.81 & 77.14 & 59.55  \\
+C2 & 78.22 & 78.64 & 58.63  \\
+C3 & 80.42 & 78.91 & 61.67  \\
+C4 & 80.07 & 78.39 & 58.46  \\
+C5 & 79.82 & 77.30 & 61.56  \\
+\end{tabular}
+\caption{Accuracy: Top 20 (Incremental)}
+\label{table:incremental-top20}
+\end{table}
+
+We took the average accuracy of each algorithm from the accuracies obtained during cross-validation and combined them in a single plot in figure~\ref{fig:line-graph}.
+
+\begin{figure}
+   \center
+    \scalebox{0.50}{\centerline{\includegraphics{figure_with_incrementals.pdf}}}
+    \caption{Accuracy plot}
+    \label{fig:line-graph}
+\end{figure}
+
+
 
 \chapter{Conclusion}
+
+We have created a very generic framework for the Customer Mix Algorithm. We chose features that would strongly indicate the recipient and then evaluated it's performance using well-known machine learning techniques. We conclude by summarizing the results obtained in chapter~\ref{chap:evaluation}.
+
 \section{Summary}
 
+For the standard modelling, in which the labels are the \emph{to} fields in the emails, Winnow performs better than Perceptron and Naive Bayes, although on a smaller dataset (top 5) it is outperformed by the other two. It must be noted that in general the accuracy decreases as the size of the dataset increases.
+
+In the binary modelling of the problem, where the label we are trying to learn is either a \emph{yes} or a \emph{no} based on whether the email is meant for the recipient specified in the \emph{to} field, the accuracy increases as the size of the input dataset increases. In this case too, Winnow outperforms Perceptron and Naive Bayes. However, it is only marginally better than Perceptron. An interesting thing to note here is that the rate of increase in accuracy of Naive Bayes is larger than the other two algorithms as the size of the training dataset increases.
+
+Thus, we have achieved decent accuracy in predicting the intended recipient given an email message and we can use it to flag a message as an error if it has a different recipient specified in the \emph{to} field. In case the algorithm makes a mistake, the correction can be used as a feedback mechanism into the algorithm in order to improve it over time.
+
+Moreover, we chose the Enron dataset and made no assumptions about the number of senders in the email messages. The algorithm is expected to perform better in case of a restricted number of senders as the Customer Mix Algorithm will be able to learn a better mapping of senders to recipients. In addition to that, there is scope to add feature extractors that are specific to the emails being learned, which will further improve our Customer Mix Algorithm.
 
 % Make the bibliography.
 % Enter your references in the BibTex file "references.bib"
@@ -251,7 +445,7 @@ Understanding inverse document frequency: On theoretical arguments for IDF,
 
 \bibitem{tf-idf}
   Juan Ramos, 2003,
-  \emph{Using TF-IDF to Determine World Relevance in Document Queries}
+  \emph{Using TF-IDF to Determine Word Relevance in Document Queries}
 
 \bibitem{snow}
  Andy Carlson, Chad Cumby, Nick Rizzolo, Jeff Rosen, Mark Sammons and Dan Roth, 
